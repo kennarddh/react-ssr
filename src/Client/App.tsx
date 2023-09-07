@@ -1,7 +1,23 @@
 import { FC } from 'react'
 
 const App: FC = () => {
-	return <div></div>
+	return (
+		<div>
+			Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt
+			repellendus aliquid necessitatibus ad inventore, obcaecati
+			voluptatum numquam, pariatur modi dolorem tenetur dolor saepe
+			expedita voluptas officiis itaque perferendis consequuntur illum
+			dolorum asperiores. Enim omnis esse laboriosam fugiat, vel possimus
+			necessitatibus suscipit in fugit dolorum veritatis ipsa! Dolorem
+			recusandae quidem animi perspiciatis reprehenderit veniam eius
+			obcaecati molestiae ullam dolorum necessitatibus dolore sit neque
+			alias ratione, qui provident nesciunt corrupti officiis ipsa commodi
+			vel cupiditate quibusdam? Corrupti dolorum, voluptatem odio
+			reprehenderit eaque modi tempora asperiores quos voluptates facilis
+			laudantium dolores eligendi deserunt officiis rem ea? Architecto
+			officia exercitationem optio, molestias porro sit?
+		</div>
+	)
 }
 
 export default App
