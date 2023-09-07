@@ -1,8 +1,9 @@
+import { createServer as createViteServer } from 'vite'
+
+import express, { NextFunction, Request, Response } from 'express'
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import express, { NextFunction, Request, Response } from 'express'
-import { createServer as createViteServer } from 'vite'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
