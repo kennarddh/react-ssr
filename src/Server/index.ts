@@ -3,6 +3,8 @@ import { createServer as createViteServer } from 'vite'
 import express, { NextFunction, Request, Response } from 'express'
 import fs from 'fs'
 import path from 'path'
+import ReactDOMServer from 'react-dom/server'
+import { ServerStyleSheet } from 'styled-components'
 import { fileURLToPath } from 'url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -26,39 +28,56 @@ async function createServer() {
 		const url = req.originalUrl
 
 		try {
-			// 1. Read index.html
+			// Read index.html
 			let template = fs.readFileSync(
 				path.resolve(__dirname, '../Client/index.html'),
 				'utf-8',
 			)
 
-			// 2. Apply Vite HTML transforms. This injects the Vite HMR client,
-			//    and also applies HTML transforms from Vite plugins, e.g. global
-			//    preambles from @vitejs/plugin-react
+			/**
+			 * Apply Vite HTML transforms. This injects the Vite HMR client,
+			 *    and also applies HTML transforms from Vite plugins, e.g. global
+			 *  preambles from @vitejs/plugin-react
+			 */
 			template = await vite.transformIndexHtml(url, template)
 
-			// 3. Load the server entry. ssrLoadModule automatically transforms
-			//    ESM source code to be usable in Node.js! There is no bundling
-			//    required, and provides efficient invalidation similar to HMR.
-			const { Render } = await vite.ssrLoadModule(
+			/**
+			 * Load the server entry. ssrLoadModule automatically transforms
+			 * ESM source code to be usable in Node.js! There is no bundling
+			 * required, and provides efficient invalidation similar to HMR.
+			 */
+			const { EntryJSX } = await vite.ssrLoadModule(
 				path.join(__dirname, '../Client/EntryServer.tsx'),
 			)
 
-			// 4. render the app HTML. This assumes entry-server.js's exported
-			//     `render` function calls appropriate framework SSR APIs,
-			//    e.g. ReactDOMServer.renderToString()
-			const appHtml = await Render(url)
+			// Build styled-componets css
+			const sheet = new ServerStyleSheet()
+			const styledAppliedJSX = sheet.collectStyles(EntryJSX())
 
-			// 5. Inject the app-rendered HTML into the template.
-			const html = template.replace('<!--ssr-outlet-->', appHtml)
+			// Refactor https://styled-components.com/docs/advanced#streaming-rendering to use response streaming
+			/**
+			 * Don't refactor to get all styles and then render because it won't work
+			 * https://styled-components.com/docs/advanced#example See this note
+			 * sheet.getStyleTags() and sheet.getStyleElement() can only be called after your element is rendered.
+			 */
+			const appHtml = ReactDOMServer.renderToString(styledAppliedJSX)
+			const styleTags = sheet.getStyleTags()
+			sheet.seal()
 
-			// 6. Send the rendered HTML back.
+			// Inject the app-rendered HTML into the template.
+			let html = template.replace('<!--ssr-outlet-->', appHtml)
+
+			// Inject styles into the template
+			html = html.replace('<!--styles-outlet-->', styleTags)
+
+			//  Send the rendered HTML
 			res.status(200).set({ 'Content-Type': 'text/html' }).end(html)
-		} catch (e) {
+		} catch (error) {
 			// If an error is caught, let Vite fix the stack trace so it maps back
 			// to your actual source code.
-			vite.ssrFixStacktrace(e as Error)
-			next(e)
+			vite.ssrFixStacktrace(error as Error)
+
+			next(error)
 		}
 	})
 

@@ -1,5 +1,12 @@
 import { FC } from 'react'
 
+import { styled } from 'styled-components'
+
+const Button = styled.button`
+	padding: 10px 20px;
+	background-color: blue;
+`
+
 const App: FC = () => {
 	return (
 		<div>
@@ -16,6 +23,7 @@ const App: FC = () => {
 			reprehenderit eaque modi tempora asperiores quos voluptates facilis
 			laudantium dolores eligendi deserunt officiis rem ea? Architecto
 			officia exercitationem optio, molestias porro sit?
+			<Button onClick={() => console.log('Clicked')}>Text</Button>
 		</div>
 	)
 }
