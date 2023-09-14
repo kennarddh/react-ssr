@@ -65,5 +65,4 @@ async function createServer() {
 	app.listen(5173)
 }
 
-// eslint-disable-next-line jest/require-hook
 createServer()
