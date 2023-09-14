@@ -5,8 +5,8 @@
 	"type": "module",
 	"scripts": {
 		"start": "ts-node-esm ./src/Server/index.ts",
-		"build:server": "tsc && vite build --outDir dist/server --ssr ./src/Client/EntryServer.tsx",
-		"build:client": "tsc && vite build --outDir dist/client",
+		"build:server": "tsc && vite build --outDir build/server --ssr ./src/Client/EntryServer.tsx",
+		"build:client": "tsc && vite build --outDir build/client",
 		"build": "npm run build:server && npm run build:client",
 		"preview": "vite preview",
 		"lint:check": "eslint src/**/*.{ts,tsx,json}",
