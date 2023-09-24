@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 
 import { styled } from 'styled-components'
 
@@ -8,6 +8,8 @@ const Button = styled.button`
 `
 
 const App: FC = () => {
+	const [Count, SetCount] = useState(0)
+
 	return (
 		<div>
 			Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt
@@ -23,7 +25,14 @@ const App: FC = () => {
 			reprehenderit eaque modi tempora asperiores quos voluptates facilis
 			laudantium dolores eligendi deserunt officiis rem ea? Architecto
 			officia exercitationem optio, molestias porro sit?
-			<Button onClick={() => console.log('Clicked')}>Text</Button>
+			<Button
+				onClick={() => {
+					console.log('Clicked')
+					SetCount(prev => prev + 1)
+				}}
+			>
+				{Count}
+			</Button>
 		</div>
 	)
 }
